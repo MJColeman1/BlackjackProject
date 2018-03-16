@@ -3,6 +3,9 @@ package com.skilldistillery.projects.blackjack;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.skilldistillery.card.common.Card;
+import com.skilldistillery.card.common.Deck;
+
 public class BlackjackApp {
 
 	private Deck deck = new Deck();
@@ -12,7 +15,6 @@ public class BlackjackApp {
 		Scanner kb = new Scanner(System.in);
 		int totalValue = 0;
 		int input = 0;
-		System.out.print("How many cards do you want to draw? ");
 		while (true) {
 			try {
 				input = kb.nextInt();

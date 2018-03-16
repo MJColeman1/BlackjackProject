@@ -1,4 +1,4 @@
-package com.skilldistillery.projects.blackjack;
+package com.skilldistillery.card.common;
 
 public class Card {
 	private Suit suit;
