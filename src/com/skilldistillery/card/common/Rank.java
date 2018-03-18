@@ -2,17 +2,20 @@ package com.skilldistillery.card.common;
 
 public enum Rank {
 
-	TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10), JACK(10), QUEEN(10), KING(
-			10), ACE(11);
+	Two(2), Three(3), Four(4), Five(5), Six(6), Seven(7), Eight(8), Nine(9), Ten(10), Jack(10), Queen(10), King(
+			10), Ace(11);
 	private int value;
 
-	Rank(int value) {
-		this.value = value;
-	}
+	private Rank(int value) {
+	      this.value = value;
+	    }
+
 
 	public int getValue() {
 		return value;
 	}
 	
-	
+	public String toString() {
+		return this.name();
+	}
 }

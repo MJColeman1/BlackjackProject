@@ -2,15 +2,19 @@ package com.skilldistillery.card.common;
 
 public class Card {
 	private Suit suit;
-	private Integer rank;
+	private Rank rank;
 
 	public Card(Rank rank, Suit suit) {
 		this.suit = suit;
-		this.rank = rank.getValue();
+		this.rank = rank;
 	}
 
-	public Integer getRank() {
+	public Rank getRank() {
 		return rank;
+	}
+	
+	public int getValue() {
+		return rank.getValue();
 	}
 
 	@Override
