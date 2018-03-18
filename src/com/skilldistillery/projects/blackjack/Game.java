@@ -1,5 +1,6 @@
 package com.skilldistillery.projects.blackjack;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Game {
@@ -16,18 +17,23 @@ public class Game {
 		Game game = new Game();
 		game.welcomeMessage();
 		game.gameRules();
-		System.out.print("Please enter your name: ");
-		game.player = new Player(scanner.next());
-		System.out.println("It's time to play " + game.player.getName() + "!\n");
+		game.enterName();
 		game.run();
 
 	}
 
 	private void welcomeMessage() {
 		System.out.println("*********************************************");
-		System.out.println("Welcome to the game of Blackjack, the most widely played casino banking game in the world.\n");
+		System.out.println(
+				"Welcome to the game of Blackjack, the most widely played casino banking game in the world.\n");
 		System.out.println("May the odds forever be in your favor.");
 		System.out.println("*********************************************");
+	}
+
+	private void enterName() {
+		System.out.print("Please enter your name: ");
+		player = new Player(scanner.next());
+		System.out.println("It's time to play, " + player.getName() + "!\n");
 	}
 
 	private void gameRules() {
@@ -52,21 +58,30 @@ public class Game {
 		dealer.hand.clearHand();
 		playRound();
 		playerBlackjack();
-		System.out.print("Select (1) to HIT or (2) to STAY: ");
+		boolean gotValidInput = false;
 		do {
-			choice = scanner.nextInt();
+			System.out.print("Select (1) to HIT or (2) to STAY: ");
+			while (!gotValidInput) {
+				try {
+					choice = scanner.nextInt();
+					gotValidInput = true;
+				} catch (InputMismatchException e) {
+					System.out.println("Invalid input. Select (1) to HIT or (2) to STAY: ");
+					scanner.nextLine();
+				}
+			}
 			switch (choice) {
 			case 1:
 				System.out.println("The dealer deals another card to you.");
 				playerHitAndResults();
+				playerBlackjack();
 				while (player.getHand().getValueOfHand() <= 21) {
 					System.out.print("Select (1) to HIT or (2) to STAY: ");
 					choice = scanner.nextInt();
 					switch (choice) {
 					case 1:
-						System.out.println("The dealer deals another card to you.");
-						playerBlackjack();
 						playerHitAndResults();
+						playerBlackjack();
 						break;
 					case 2:
 						System.out.println();
@@ -101,14 +116,19 @@ public class Game {
 		System.out.println("You're now showing " + player.getHand());
 		playerCardValue = player.getHand().getValueOfHand();
 		System.out.println("The current value of your hand is " + playerCardValue);
+		if (player.getHand().getValueOfHand() > 21) {
+			System.out.println("You busted on the initial draw! Bad luck!");
+			playAgain();
+		}
 		System.out.println("*********************************************");
 		dealerCardValue = dealer.getHand().getValueOfHand();
 		System.out.println("The dealer is showing " + dealer.getHand().getDealerFirstCard());
 	}
 
 	private void playerHitAndResults() {
+
 		player.getHand().addCard(dealer.dealCard());
-		System.out.println("You're now showing " + player.getHand());
+		System.out.println("You're now showing: " + player.getHand());
 		playerCardValue = player.getHand().getValueOfHand();
 		System.out.println("The current value of your hand is " + playerCardValue);
 		if (player.hand.getValueOfHand() > 21) {
@@ -128,7 +148,6 @@ public class Game {
 
 		}
 		if (dealer.getHand().getValueOfHand() > player.getHand().getValueOfHand()) {
-			System.out.println("The current value of the dealer's hand is " + dealer.getHand().getValueOfHand());
 			dealerWins();
 			playAgain();
 		}
@@ -163,8 +182,7 @@ public class Game {
 				dealerWins();
 				playAgain();
 				break;
-			}
-			else if (dealer.getHand().getValueOfHand() == 21 && player.getHand().getValueOfHand() < 21) {
+			} else if (dealer.getHand().getValueOfHand() == 21 && player.getHand().getValueOfHand() < 21) {
 				System.out.println("The current value of the dealer's hand is " + dealer.getHand().getValueOfHand());
 				System.out.println("You chose to stay and the dealer has blackjack. You lose this round!");
 				playAgain();
@@ -190,13 +208,11 @@ public class Game {
 				System.out.println("The dealer has busted! You win this round!");
 				playAgain();
 				break;
-			} 
-			else if (dealer.getHand().getValueOfHand() == 21 && player.getHand().getValueOfHand() < 21) {
+			} else if (dealer.getHand().getValueOfHand() == 21 && player.getHand().getValueOfHand() < 21) {
 				System.out.println("The current value of the dealer's hand is " + dealer.getHand().getValueOfHand());
 				System.out.println("You chose to stay and the dealer has blackjack. You lose this round!");
 				playAgain();
-			}
-			else if (dealer.getHand().getValueOfHand() > player.getHand().getValueOfHand()
+			} else if (dealer.getHand().getValueOfHand() > player.getHand().getValueOfHand()
 					&& dealer.getHand().getValueOfHand() < 21) {
 				dealerWins();
 				playAgain();
@@ -215,7 +231,16 @@ public class Game {
 
 	private void playAgain() {
 		System.out.print("Do you want to play another round? Select (1) to play or (2) to quit: ");
-		choice = scanner.nextInt();
+		boolean gotValidInput = false;
+		while (!gotValidInput) {
+			try {
+				choice = scanner.nextInt();
+				gotValidInput = true;
+			} catch (InputMismatchException e) {
+				System.out.println("Invalid input. Select (1) to play or (2) to quit: ");
+				scanner.nextLine();
+			}
+		}
 		switch (choice) {
 		case 1:
 			System.out.println("Here we go again " + player.getName() + "!\n");
@@ -231,13 +256,6 @@ public class Game {
 	private void playerBlackjack() {
 		if (player.getHand().getValueOfHand() == 21) {
 			System.out.println("The current value of your cards is 21. Make sure you don't HIT!");
-		}
-	}
-
-	private void roundEndsInTie() {
-		if (dealer.getHand().getValueOfHand() == 21 && player.getHand().getValueOfHand() == 21) {
-			System.out.println("This round ends in a tie.");
-			playAgain();
 		}
 	}
 }
