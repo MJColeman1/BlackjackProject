@@ -12,7 +12,7 @@ Before playing the game, the user will have the rules of Blackjack explained to 
 
 #### Technologies Used
 
-* Classes with Fields as Objects
+* Classes with Objects as Fields
 * While and Do-While Loops
 * If and Else/If Statements
 * Encapsulation
